@@ -1,21 +1,41 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@500;600;700;800&display=swap');
 @import "tailwindcss";
 
 :root {
-  --text: #36284c;
-  --text-h: #140d19;
-  --bg: #ffffff;
-  --border: #9d6e90;
-  --code-bg: #d8bfd7;
-  --accent: #6a2e3d;
-  --accent-bg: rgba(106, 46, 61, 0.14);
-  --accent-border: rgba(106, 46, 61, 0.45);
-  --social-bg: rgba(231, 211, 230, 0.6);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
+  --p-ash: #FBFBFB;
+  --p-mist: #E8F9FF;
+  --p-sky: #C4D9FF;
+  --p-lavender: #C5BAFF;
 
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
+  --bg-page: #FFFFFF;
+  --bg-surface: #FFFFFF;
+  --bg-card: #FFFFFF;
+  --bg-soft: #FFFFFF;
+  --bg-strong: #FFFFFF;
+  --bg-accent: var(--p-lavender);
+
+  --ink-900: #27324a;
+  --ink-700: #475676;
+  --ink-500: #5f7094;
+  --border-strong: var(--p-lavender);
+  --border-soft: var(--p-sky);
+
+  --text: var(--ink-700);
+  --text-h: var(--ink-900);
+  --bg: var(--bg-page);
+  --border: var(--border-soft);
+  --code-bg: var(--p-ash);
+  --accent: var(--ink-500);
+  --accent-bg: rgba(196, 217, 255, 0.28);
+  --accent-border: rgba(197, 186, 255, 0.7);
+  --social-bg: rgba(183, 171, 235, 0.2);
+  --shadow:
+    rgba(39, 50, 74, 0.16) 0 10px 24px -8px,
+    rgba(39, 50, 74, 0.12) 0 6px 12px -6px;
+
+  --sans: 'Manrope', 'Segoe UI', sans-serif;
+  --heading: 'Sora', 'Manrope', 'Segoe UI', sans-serif;
+  --mono: 'Cascadia Code', Consolas, monospace;
 
   font: 18px/145% var(--sans);
   letter-spacing: 0.18px;
@@ -34,7 +54,7 @@
 
 body {
   margin: 0;
-  background: #ffffff;
+  background: #FFFFFF;
 }
 
 #root {
@@ -42,11 +62,13 @@ body {
   max-width: 1440px;
   margin: 0 auto;
   text-align: center;
-  border-inline: 1px solid var(--border);
+  border-inline: 2px solid var(--border);
   min-height: 100svh;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+  background: #FFFFFF;
+  box-shadow: var(--shadow);
 }
 
 h1,

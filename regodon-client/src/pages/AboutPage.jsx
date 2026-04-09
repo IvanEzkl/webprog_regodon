@@ -1,5 +1,5 @@
 import Button from "../components/Button";
-import heroImage from "../assets/hero.png";
+import heroImage from "../assets/hero.jpg";
 import reactMark from "../assets/react.svg";
 import viteMark from "../assets/vite.svg";
 
@@ -34,9 +34,10 @@ const tools = [
 const AboutPage = () => {
   return (
     <div className="flex w-full flex-col gap-6">
-      <section className="border-y-2 border-[#140D19] bg-white px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
+      <section className="relative overflow-hidden border-y-2 border-[var(--border-strong)] bg-[var(--bg-surface)] px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
+        <div aria-hidden="true" className="pointer-events-none absolute -right-16 top-10 h-40 w-40 rounded-full bg-[var(--p-mist)] blur-3xl" />
         <div className="grid gap-8 lg:grid-cols-2 lg:items-center">
-          <div className="rounded-3xl border-2 border-dashed border-[#9D6E90]/45 bg-white p-4 sm:p-6">
+          <div className="rounded-3xl border-2 border-dashed border-[var(--border-soft)] bg-[var(--bg-card)] p-4 shadow-[0_18px_34px_-24px_rgba(39,50,74,0.48)] sm:p-6">
             <img
               src={heroImage}
               alt="Designer workspace"
@@ -45,18 +46,18 @@ const AboutPage = () => {
           </div>
 
           <div>
-            <p className="mb-3 text-sm font-semibold uppercase tracking-[0.16em] text-[#9D6E90]">
+            <p className="mb-3 text-sm font-semibold uppercase tracking-[0.16em] text-[var(--ink-500)]">
               About The Creator
             </p>
-            <h1 className="max-w-xl text-5xl font-black leading-tight text-[#140D19] sm:text-6xl">
+            <h1 className="max-w-xl text-5xl font-black leading-tight text-[var(--ink-900)] sm:text-6xl">
               Ivan Ezekiel Regodon
             </h1>
-            <p className="mt-5 max-w-lg text-base leading-8 text-[#36284C] sm:text-lg">
+            <p className="mt-5 max-w-lg text-base leading-8 text-[var(--ink-700)] sm:text-lg">
               I build practical digital products that combine strong visual
               structure and maintainable code. My focus is creating experiences
               that are easy to use, fast to load, and clear to navigate.
             </p>
-            <p className="mt-4 max-w-lg text-base leading-8 text-[#36284C] sm:text-lg">
+            <p className="mt-4 max-w-lg text-base leading-8 text-[var(--ink-700)] sm:text-lg">
               My recent projects include web interfaces for student workflows,
               portfolio systems, and feature-driven dashboards where each screen
               has a clear user goal.
@@ -71,12 +72,12 @@ const AboutPage = () => {
         </div>
       </section>
 
-      <section className="border-y-2 border-[#140D19] bg-white px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
+      <section className="border-y-2 border-[var(--border-strong)] bg-[var(--bg-surface)] px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
         <div className="mb-6">
-          <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#9D6E90]">
+          <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[var(--ink-500)]">
             My Process
           </p>
-          <h2 className="mt-2 text-3xl font-bold text-[#140D19] sm:text-4xl">
+          <h2 className="mt-2 text-3xl font-bold text-[var(--ink-900)] sm:text-4xl">
             How projects move from idea to release
           </h2>
         </div>
@@ -85,13 +86,14 @@ const AboutPage = () => {
           {workflow.map((item) => (
             <article
               key={item.step}
-              className="rounded-3xl border-2 border-[#36284C] bg-white p-5"
+              className="group relative overflow-hidden rounded-3xl border-2 border-[var(--border-strong)] bg-[var(--bg-card)] p-5 transition-transform duration-200 hover:-translate-y-0.5"
             >
-              <p className="text-sm font-black uppercase tracking-[0.14em] text-[#9D6E90]">
+              <span className="absolute inset-x-0 top-0 h-1 bg-[linear-gradient(90deg,var(--p-mist)_0%,var(--p-sky)_50%,var(--p-lavender)_100%)]" />
+              <p className="text-sm font-black uppercase tracking-[0.14em] text-[var(--ink-500)]">
                 Step {item.step}
               </p>
-              <h3 className="mt-3 text-xl font-bold text-[#140D19]">{item.title}</h3>
-              <p className="mt-3 text-base leading-7 text-[#36284C]">
+              <h3 className="mt-3 text-xl font-bold text-[var(--ink-900)]">{item.title}</h3>
+              <p className="mt-3 text-base leading-7 text-[var(--ink-700)]">
                 {item.description}
               </p>
             </article>
@@ -99,12 +101,12 @@ const AboutPage = () => {
         </div>
       </section>
 
-      <section className="border-y-2 border-[#140D19] bg-white px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
+      <section className="border-y-2 border-[var(--border-strong)] bg-[var(--bg-surface)] px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
         <div className="mb-6">
-          <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#9D6E90]">
+          <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[var(--ink-500)]">
             Toolkit
           </p>
-          <h2 className="mt-2 text-3xl font-bold text-[#140D19] sm:text-4xl">
+          <h2 className="mt-2 text-3xl font-bold text-[var(--ink-900)] sm:text-4xl">
             Technologies and strengths
           </h2>
         </div>
@@ -113,14 +115,14 @@ const AboutPage = () => {
           {tools.map((tool) => (
             <article
               key={tool.name}
-              className="rounded-2xl border-2 border-[#36284C] bg-white p-5"
+              className="rounded-2xl border-2 border-[var(--border-strong)] bg-[var(--bg-card)] p-5 shadow-[0_14px_28px_-24px_rgba(39,50,74,0.62)]"
             >
               <img
                 src={tool.icon}
                 alt={tool.name}
-                className="h-12 w-12 rounded-lg border-2 border-[#9D6E90]/45 bg-white p-2"
+                className="h-12 w-12 rounded-lg border-2 border-[var(--border-soft)] bg-[var(--p-mist)] p-2"
               />
-              <h3 className="mt-3 text-lg font-bold text-[#140D19]">{tool.name}</h3>
+              <h3 className="mt-3 text-lg font-bold text-[var(--ink-900)]">{tool.name}</h3>
             </article>
           ))}
         </div>

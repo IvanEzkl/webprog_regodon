@@ -11,13 +11,13 @@ const navLinkClassName = ({ isActive }) =>
   [
     'rounded-full border-2 px-5 py-2.5 text-sm font-semibold uppercase tracking-[0.14em] transition-colors',
     isActive
-      ? 'border-[#140D19] bg-[#140D19] text-white'
-      : 'border-transparent text-[#6A2E3D] hover:border-[#9D6E90] hover:bg-[#9D6E90]/20 hover:text-[#140D19]',
+      ? 'border-[var(--border-strong)] bg-[var(--p-lavender)] text-[var(--ink-900)]'
+      : 'border-transparent text-[var(--ink-700)] hover:border-[var(--border-soft)] hover:bg-[var(--accent-bg)] hover:text-[var(--ink-900)]',
   ].join(' ');
 
 const NavBar = () => {
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b-2 border-[#36284C]/70 bg-white/95 backdrop-blur-md">
+    <header className="fixed inset-x-0 top-0 z-50 border-b-2 border-[var(--border-soft)] bg-white/95 backdrop-blur-md">
       <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
         <NavLink to="/" className="transition-opacity hover:opacity-80">
           <Logo />

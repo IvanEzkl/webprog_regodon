@@ -1,100 +1,52 @@
-import Button from "../components/Button";
-import heroImage from "../assets/hero.png";
-import reactMark from "../assets/react.svg";
-import viteMark from "../assets/vite.svg";
+import { useParams } from 'react-router-dom';
+import Button from '../components/Button';
+import articles from '../assets/article-content.js'
+import NotFoundPage from './NotFoundPage';
 
-const articles = [
-  {
-    title: "Planning Layouts With Wireframe Thinking",
-    category: "Design",
-    image: heroImage,
-    summary:
-      "A practical guide to structuring hero sections, feature blocks, and supporting content so each page tells one clear story.",
-  },
-  {
-    title: "Component-Driven UI in React",
-    category: "Development",
-    image: reactMark,
-    summary:
-      "How reusable components reduce bugs and speed up iteration when building multi-page sites with shared UI patterns.",
-  },
-  {
-    title: "Fast Prototypes Using Vite",
-    category: "Tooling",
-    image: viteMark,
-    summary:
-      "Why Vite improves local development flow, and how to keep your project structure clean as features grow.",
-  },
-  {
-    title: "Designing Readable Interfaces",
-    category: "UX",
-    image: heroImage,
-    summary:
-      "Typography scale, spacing rhythm, and visual hierarchy techniques that make pages easier to scan and understand.",
-  },
-  {
-    title: "From Brief to Build",
-    category: "Process",
-    image: reactMark,
-    summary:
-      "A repeatable workflow for converting assignment briefs into implementation-ready sections and polished deliverables.",
-  },
-  {
-    title: "Balancing Style and Performance",
-    category: "Engineering",
-    image: viteMark,
-    summary:
-      "Methods for maintaining visual quality while keeping bundle size and rendering performance under control.",
-  },
-];
+function ArticlePage() {
+  const { name } = useParams();
+  const article = articles.find(article => article.name === name);
 
-const ArticlePage = () => {
+  if (!article || !Array.isArray(article.content) || article.content.length === 0) {
+    return <NotFoundPage />;
+  }
+
   return (
     <div className="flex w-full flex-col gap-6">
-      <section className="border-y-2 border-[#140D19] bg-white px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
-        <div className="max-w-3xl">
-          <p className="text-sm font-semibold uppercase tracking-[0.16em] text-[#9D6E90]">
-            Articles
-          </p>
-          <h1 className="mt-3 text-5xl font-black leading-tight text-[#140D19] sm:text-6xl">
-            Insights on design, code, and product delivery
-          </h1>
-          <p className="mt-5 text-base leading-8 text-[#36284C] sm:text-lg">
-            This section compiles short writeups on methods used in this
-            project: from wireframe planning and design consistency to modular
-            development and implementation speed.
-          </p>
-          <div className="mt-7">
-            <Button to="/about" variant="primary">
-              Meet The Creator
-            </Button>
+      <section className="border-y-2 border-[var(--border-strong)] bg-[var(--bg-surface)] px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
+        <div className="mx-auto max-w-3xl">
+          <div className="mb-4">
+            <Button to="/articles"> Back to Articles</Button>
           </div>
+          <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.28em] text-[var(--ink-500)]">
+            Article
+          </p>
+          <h1 className="text-3xl font-bold leading-tight text-[var(--ink-900)] sm:text-4xl">
+            {article.title}
+          </h1>
+          <p className="mt-2 text-sm text-[var(--ink-500)]">
+            {article.name.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
+          </p>
         </div>
       </section>
 
-      <section className="border-y-2 border-[#140D19] bg-white px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-          {articles.map((article) => (
-            <article
-              key={article.title}
-              className="rounded-3xl border-2 border-[#36284C] bg-white p-5"
-            >
-              <img
-                src={article.image}
-                alt={article.title}
-                className="h-44 w-full rounded-[1.25rem] border-2 border-[#9D6E90]/45 bg-white object-cover p-2"
-              />
-              <p className="mt-4 text-xs font-semibold uppercase tracking-[0.16em] text-[#9D6E90] sm:text-sm">
-                {article.category}
+      <section className="border-y-2 border-[var(--border-strong)] bg-[var(--bg-surface)] px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
+        <div className="mx-auto max-w-3xl">
+          <div className="mb-8 flex aspect-4/3 items-center justify-center rounded-[1.25rem] border-2 border-[var(--border-strong)] bg-[var(--bg-card)]">
+            <div className="h-24 w-24 border-2 border-[var(--border-soft)] bg-[var(--bg-card)]" />
+          </div>
+
+          <div className="prose prose-sm max-w-none space-y-4 text-[var(--ink-700)]">
+            {article.content.map((paragraph, index) => (
+              <p key={index} className="whitespace-pre-wrap text-base leading-7 text-[var(--ink-700)]">
+                {paragraph}
               </p>
-              <h2 className="mt-2 text-2xl font-bold text-[#140D19]">
-                {article.title}
-              </h2>
-              <p className="mt-3 text-base leading-7 text-[#36284C]">
-                {article.summary}
-              </p>
-            </article>
-          ))}
+            ))}
+          </div>
+
+          <div className="mt-8 border-t-2 border-[var(--border-strong)] pt-6">
+            <Button to="/articles">Back to Articles</Button>
+          </div>
         </div>
       </section>
     </div>
