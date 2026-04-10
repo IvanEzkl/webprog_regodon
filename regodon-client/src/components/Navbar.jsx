@@ -39,7 +39,7 @@ const NavBar = ({ theme, onToggleTheme }) => {
           <Logo />
         </NavLink>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-4 md:gap-5">
         <nav className="hidden items-center gap-2 md:flex">
           {links.map((link) => (
             <NavLink
