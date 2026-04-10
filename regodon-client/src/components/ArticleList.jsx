@@ -6,9 +6,18 @@ return (
     <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {articles.map((article, index) => (
         <article key={article.name} className="rounded-3xl border-2 border-[var(--border-strong)] bg-[var(--bg-card)] p-4">
-    <div className="flex aspect-4/3 items-center justify-center rounded-[1.25rem] bg-[var(--bg-card)]">
-    <div className="h-12 w-12 border-2 border-[var(--border-soft)] bg-[var(--bg-card)]" />
-        </div>
+        <div className="flex aspect-[4/3] items-center justify-center overflow-hidden rounded-[1.25rem] border-2 border-[var(--border-soft)] bg-[var(--bg-soft)] p-2">
+        {article.coverImage ? (
+            <img
+                src={article.coverImage}
+                alt={article.coverAlt || article.title}
+                className="h-full w-full object-contain"
+                loading="lazy"
+            />
+        ) : (
+            <div className="h-12 w-12 border-2 border-[var(--border-soft)] bg-[var(--bg-card)]" />
+        )}
+                </div>
     <p className="mt-4 text-[11px] font-semibold uppercase tracking-[0.24em] text-[var(--ink-500)]">
         Article {String(index + 1).padStart(2, '0')}
             </p>

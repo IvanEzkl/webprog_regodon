@@ -32,8 +32,17 @@ function ArticlePage() {
 
       <section className="border-y-2 border-[var(--border-strong)] bg-[var(--bg-surface)] px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
         <div className="mx-auto max-w-3xl">
-          <div className="mb-8 flex aspect-4/3 items-center justify-center rounded-[1.25rem] border-2 border-[var(--border-strong)] bg-[var(--bg-card)]">
-            <div className="h-24 w-24 border-2 border-[var(--border-soft)] bg-[var(--bg-card)]" />
+          <div className="mb-8 flex aspect-[4/3] items-center justify-center overflow-hidden rounded-[1.25rem] border-2 border-[var(--border-strong)] bg-[var(--bg-soft)] p-2">
+            {article.coverImage ? (
+              <img
+                src={article.coverImage}
+                alt={article.coverAlt || article.title}
+                className="h-full w-full object-contain"
+                loading="lazy"
+              />
+            ) : (
+              <div className="h-24 w-24 border-2 border-[var(--border-soft)] bg-[var(--bg-card)]" />
+            )}
           </div>
 
           <div className="prose prose-sm max-w-none space-y-4 text-[var(--ink-700)]">
