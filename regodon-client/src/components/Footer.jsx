@@ -50,7 +50,7 @@ const Footer = () => {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="border-t-2 border-[var(--border-strong)] bg-white px-4 py-10 sm:px-6 lg:px-8">
+    <footer className="border-t-2 border-[var(--border-strong)] bg-[var(--bg-surface)] px-4 py-10 sm:px-6 lg:px-8 transition-colors duration-300">
       <div className="mx-auto flex w-full max-w-6xl flex-col items-center justify-between gap-7 sm:gap-8 lg:flex-row">
         <div className="text-center lg:text-left">
           <Logo className="justify-center lg:justify-start" />
@@ -68,7 +68,7 @@ const Footer = () => {
               rel="noreferrer"
               aria-label={link.label}
               title={link.label}
-              className="inline-flex h-10 w-10 items-center justify-center rounded-full border-2 border-[var(--border-soft)] bg-white text-[var(--ink-700)] shadow-[0_8px_18px_-14px_rgba(39,50,74,0.8)] transition hover:-translate-y-0.5 hover:border-[var(--border-strong)] hover:bg-[var(--p-mist)] hover:text-[var(--ink-900)]"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full border-2 border-[var(--border-soft)] bg-[var(--bg-card)] text-[var(--ink-700)] shadow-[0_8px_18px_-14px_rgba(39,50,74,0.8)] transition hover:-translate-y-0.5 hover:border-[var(--border-strong)] hover:bg-[var(--bg-soft)] hover:text-[var(--ink-900)]"
             >
               <SocialIcon label={link.label} />
             </a>

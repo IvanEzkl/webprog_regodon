@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 
 const variantClasses = {
-  primary: 'bg-[var(--ink-900)] text-white hover:bg-[var(--ink-700)]',
+  primary: 'bg-[var(--button-primary-bg)] text-[var(--button-primary-text)] hover:bg-[var(--button-primary-hover)]',
   secondary: 'bg-[var(--bg-card)] text-[var(--ink-900)] hover:bg-[var(--bg-soft)]',
 };
 
