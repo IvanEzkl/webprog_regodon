@@ -230,3 +230,11 @@ code {
 .theme-switch__spark {
   stroke-width: 3;
 }
+
+/* Allow auth layout to be full-bleed */
+#root:has(.auth-layout) {
+  max-width: none;
+  border-inline: none;
+  box-shadow: none;
+  background: #0a0a0c;
+}

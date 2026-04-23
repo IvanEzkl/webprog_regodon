@@ -1,8 +1,7 @@
-import Button from "../components/Button";
-import heroImage from "../assets/hero.jpg";
-import reactMark from "../assets/react.svg";
-import viteMark from "../assets/vite.svg";
-
+import Button from "../../components/Button";
+import heroImage from "../../assets/hero.jpg";
+import reactMark from "../../assets/react.svg";
+import viteMark from "../../assets/vite.svg";
 const workflow = [
   {
     step: "01",

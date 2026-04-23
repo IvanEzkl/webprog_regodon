@@ -1,6 +1,6 @@
-import Button from "../components/Button";
-import reactMark from "../assets/react.svg";
-import viteMark from "../assets/vite.svg";
+import Button from "../../components/Button";
+import reactMark from "../../assets/react.svg";
+import viteMark from "../../assets/vite.svg";
 
 const highlights = [
   {

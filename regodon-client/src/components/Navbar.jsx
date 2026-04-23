@@ -5,6 +5,7 @@ const links = [
   { label: 'Home', to: '/' },
   { label: 'About', to: '/about' },
   { label: 'Articles', to: '/articles' },
+  { label: 'Sign In', to: '/auth/signin' },
 ];
 
 const navLinkClassName = ({ isActive }) =>
@@ -34,13 +35,13 @@ const NavBar = ({ theme, onToggleTheme }) => {
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b-2 border-[var(--border-soft)] bg-[var(--bg-surface)]/95 backdrop-blur-md transition-colors duration-300">
-      <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
+      <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-6 px-4 py-3 sm:px-6 lg:px-8">
         <NavLink to="/" className="transition-opacity hover:opacity-80">
           <Logo />
         </NavLink>
 
-        <div className="flex items-center gap-4 md:gap-5">
-        <nav className="hidden items-center gap-2 md:flex">
+        <div className="flex items-center gap-6 md:gap-8">
+        <nav className="hidden items-center gap-3 md:flex">
           {links.map((link) => (
             <NavLink
               key={link.to}
