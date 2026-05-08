@@ -238,3 +238,10 @@ code {
   box-shadow: none;
   background: #0a0a0c;
 }
+
+/* Allow dash layout to be full-bleed */
+#root:has(.dash-layout) {
+  max-width: none;
+  border-inline: none;
+  box-shadow: none;
+}
