@@ -60,7 +60,7 @@ const recentActivity = [
 function DashboardPage() {
   return (
     <Box>
-      <Box sx={{ mb: 5 }}>
+      <Box sx={{ textAlign: 'center', mb: 5 }}>
         <Typography variant="h4" fontWeight={700} gutterBottom>
           Dashboard Overview
         </Typography>
@@ -86,10 +86,10 @@ function DashboardPage() {
                     variant="outlined"
                   />
                 </Stack>
-                <Typography variant="h3" fontWeight={700} sx={{ mb: 0.5 }}>
+                <Typography variant="h3" fontWeight={700} align="center" sx={{ mb: 0.5 }}>
                   {stat.value}
                 </Typography>
-                <Typography variant="body1" color="text.secondary" sx={{ mb: 3 }}>
+                <Typography variant="body1" color="text.secondary" align="center" sx={{ mb: 3 }}>
                   {stat.label}
                 </Typography>
                 <LinearProgress

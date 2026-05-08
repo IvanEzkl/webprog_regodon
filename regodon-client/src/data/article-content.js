@@ -1,7 +1,7 @@
-import herodesign from './herodesign.jpg';
-import gridCover from './grid.png';
-import navCover from './webnav.jpeg';
-import defaultCover from './hero.jpg';
+import herodesign from '../assets/herodesign.jpg';
+import gridCover from '../assets/grid.png';
+import navCover from '../assets/webnav.jpeg';
+import defaultCover from '../assets/hero.jpg';
 
 const articles = [
   {
