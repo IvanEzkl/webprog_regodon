@@ -104,6 +104,12 @@ const dashboardNavItems = [
     icon: AssessmentIcon,
   },
   {
+    label: 'Article List',
+    title: 'Article List',
+    to: '/dashboard/article-list',
+    icon: ArticleIcon,
+  },
+  {
     label: 'Users',
     title: 'Users',
     to: '/dashboard/users',

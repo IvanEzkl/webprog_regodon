@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Alert,
   Box,
@@ -24,6 +24,7 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { DataGrid } from '@mui/x-data-grid';
 import usersSeed from '../../data/users.json';
+import { createUser, fetchUsers } from '../../../UserService';
 
 const roles = ['admin', 'editor', 'viewer'];
 const genders = ['male', 'female', 'other'];
@@ -76,6 +77,37 @@ const loadUsers = () => {
 
 const seed = loadUsers();
 
+const normalizeUsers = (apiUsers) =>
+  apiUsers.map((user, index) => ({
+    id: user._id || user.id || index + 1,
+    firstName: String(user.firstName ?? '').trim(),
+    lastName: String(user.lastName ?? '').trim(),
+    age: String(user.age ?? '').trim(),
+    gender: String(user.gender ?? '').trim().toLowerCase(),
+    contactNumber: String(user.contactNumber ?? '').trim(),
+    email: String(user.email ?? '').trim().toLowerCase(),
+    role: String(user.type ?? user.role ?? '').trim().toLowerCase() || 'editor',
+    username: String(user.username ?? '').trim().toLowerCase(),
+    password: '',
+    address: String(user.address ?? '').trim(),
+    isActive: typeof user.isActive === 'boolean' ? user.isActive : true,
+  }));
+
+const mergeUsers = (seedUsers, apiUsers) => {
+  const map = new Map();
+
+  [...seedUsers, ...apiUsers].forEach((user) => {
+    const key = user.email || user.username || String(user.id || '');
+    if (!key) {
+      return;
+    }
+
+    map.set(key, user);
+  });
+
+  return Array.from(map.values());
+};
+
 const UsersPage = () => {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
@@ -88,6 +120,28 @@ const UsersPage = () => {
   const [filterRole, setFilterRole] = useState('');
   const [filterGender, setFilterGender] = useState('');
   const [filterStatus, setFilterStatus] = useState('');
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadApiUsers = async () => {
+      try {
+        const { data } = await fetchUsers();
+        if (isMounted && Array.isArray(data?.users)) {
+          const apiUsers = normalizeUsers(data.users);
+          setUsers(mergeUsers(seed.users, apiUsers));
+        }
+      } catch (error) {
+        console.error('Error fetching users:', error);
+      }
+    };
+
+    loadApiUsers();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const filteredUsers = users.filter((user) => {
     const q = search.trim().toLowerCase();
@@ -192,7 +246,7 @@ const UsersPage = () => {
     return nextErrors;
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const nextErrors = validate();
 
@@ -214,6 +268,24 @@ const UsersPage = () => {
       address: form.address.trim(),
       isActive: form.isActive,
     };
+
+    if (!modal.id) {
+      const payload = { ...newUser, type: newUser.role };
+      delete payload.role;
+      try {
+        await createUser(payload);
+        const { data } = await fetchUsers();
+        if (Array.isArray(data?.users)) {
+          const apiUsers = normalizeUsers(data.users);
+          setUsers(mergeUsers(seed.users, apiUsers));
+          closeModal();
+          return;
+        }
+      } catch (error) {
+        console.error('Error saving user:', error);
+        return;
+      }
+    }
 
     setUsers((prev) =>
       modal.id
@@ -313,6 +385,14 @@ const UsersPage = () => {
       ),
     },
   ];
+
+  if (localStorage.getItem('type') === 'editor') {
+    return (
+      <Box sx={{ width: '100%', minWidth: 0 }}>
+        <Alert severity="error">Access Denied: Editors cannot view this panel.</Alert>
+      </Box>
+    );
+  }
 
   return (
     <Box sx={{ width: '100%', minWidth: 0 }}>
