@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   Box,
   Button,
@@ -14,31 +14,80 @@ import {
   Typography,
 } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
-import articles from '../../data/article-content.js';
+import {
+  createArticle,
+  fetchArticles,
+  toggleArticleStatus,
+  updateArticle,
+} from '../../../ArticleService.js';
 
-const buildRowsFromArticles = () =>
-  articles.map((article, index) => {
-    const paragraphs = Array.isArray(article.content) ? article.content : [];
-    const preview = paragraphs.length ? paragraphs[0] : '';
+const mapArticleToRow = (article, index) => {
+  const paragraphs = Array.isArray(article.content) ? article.content : [];
+  const preview = paragraphs.length ? paragraphs[0] : '';
 
-    return {
-      id: index + 1,
-      slug: article.name,
-      title: article.title,
-      content: paragraphs.join('\n'),
-      paragraphs: paragraphs.length,
-      preview,
-      status: 'active',
-    };
-  });
+  return {
+    id: article._id || index + 1,
+    slug: article.name,
+    title: article.title,
+    content: paragraphs.join('\n'),
+    paragraphs: paragraphs.length,
+    preview,
+    status: article.isActive === false ? 'inactive' : 'active',
+    coverImage: article.coverImage || '',
+    coverAlt: article.coverAlt || '',
+  };
+};
 
 const DashArticleListPage = () => {
-  const [rows, setRows] = useState(buildRowsFromArticles());
+  const [rows, setRows] = useState([]);
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   const [modal, setModal] = useState({ open: false, id: null });
-  const [form, setForm] = useState({ slug: '', title: '', content: '', status: 'active' });
+  const [form, setForm] = useState({
+    slug: '',
+    title: '',
+    coverImage: '',
+    coverAlt: '',
+    content: '',
+    status: 'active',
+  });
   const [formError, setFormError] = useState('');
+  const [loadError, setLoadError] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+
+  useEffect(() => {
+    let isMounted = true;
+    setIsLoading(true);
+    setLoadError('');
+
+    fetchArticles({ includeInactive: true })
+      .then(({ data }) => {
+        if (!isMounted) {
+          return;
+        }
+        const nextRows = Array.isArray(data?.articles)
+          ? data.articles.map(mapArticleToRow)
+          : [];
+        setRows(nextRows);
+      })
+      .catch((err) => {
+        if (!isMounted) {
+          return;
+        }
+        setLoadError(err?.response?.data?.message || 'Unable to load articles.');
+      })
+      .finally(() => {
+        if (!isMounted) {
+          return;
+        }
+        setIsLoading(false);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const filteredRows = rows.filter((row) => {
     const query = search.trim().toLowerCase();
@@ -110,6 +159,8 @@ const DashArticleListPage = () => {
       setForm({
         slug: row.slug,
         title: row.title,
+        coverImage: row.coverImage || '',
+        coverAlt: row.coverAlt || '',
         content: row.content || '',
         status: row.status,
       });
@@ -117,7 +168,14 @@ const DashArticleListPage = () => {
       return;
     }
 
-    setForm({ slug: '', title: '', content: '', status: 'active' });
+    setForm({
+      slug: '',
+      title: '',
+      coverImage: '',
+      coverAlt: '',
+      content: '',
+      status: 'active',
+    });
     setModal({ open: true, id: null });
   };
 
@@ -134,9 +192,11 @@ const DashArticleListPage = () => {
     }
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     const slug = form.slug.trim();
     const title = form.title.trim();
+    const coverImage = form.coverImage.trim();
+    const coverAlt = form.coverAlt.trim();
 
     if (!slug || !title) {
       setFormError('Slug and title are required.');
@@ -147,50 +207,53 @@ const DashArticleListPage = () => {
     const paragraphs = content
       ? content.split('\n').map((line) => line.trim()).filter(Boolean)
       : [];
-    const preview = paragraphs.length ? paragraphs[0] : '';
+    setIsSaving(true);
+    setFormError('');
 
-    if (modal.id) {
-      setRows((prev) =>
-        prev.map((row) =>
-          row.id === modal.id
-            ? {
-                ...row,
-                slug,
-                title,
-                content,
-                paragraphs: paragraphs.length,
-                preview,
-                status: form.status,
-              }
-            : row
-        )
-      );
-    } else {
-      setRows((prev) => [
-        ...prev,
-        {
-          id: prev.reduce((max, row) => Math.max(max, Number(row.id) || 0), 0) + 1,
-          slug,
+    try {
+      if (modal.id) {
+        const payload = {
+          name: slug,
           title,
-          content,
-          paragraphs: paragraphs.length,
-          preview,
-          status: form.status,
-        },
-      ]);
-    }
+          coverImage,
+          coverAlt,
+          content: paragraphs,
+          isActive: form.status === 'active',
+        };
+        const { data } = await updateArticle(modal.id, payload);
+        const nextRow = mapArticleToRow(data.article, 0);
+        setRows((prev) => prev.map((row) => (row.id === modal.id ? nextRow : row)));
+      } else {
+        const payload = {
+          name: slug,
+          title,
+          coverImage,
+          coverAlt,
+          content: paragraphs,
+          isActive: form.status === 'active',
+        };
+        const { data } = await createArticle(payload);
+        const nextRow = mapArticleToRow(data.article, 0);
+        setRows((prev) => [nextRow, ...prev]);
+      }
 
-    closeModal();
+      closeModal();
+    } catch (err) {
+      const message = err?.response?.data?.message || 'Unable to save article.';
+      setFormError(message);
+    } finally {
+      setIsSaving(false);
+    }
   };
 
-  const handleToggleStatus = (rowId) => {
-    setRows((prev) =>
-      prev.map((row) =>
-        row.id === rowId
-          ? { ...row, status: row.status === 'active' ? 'inactive' : 'active' }
-          : row
-      )
-    );
+  const handleToggleStatus = async (rowId) => {
+    try {
+      const { data } = await toggleArticleStatus(rowId);
+      const nextRow = mapArticleToRow(data.article, 0);
+      setRows((prev) => prev.map((row) => (row.id === rowId ? nextRow : row)));
+    } catch (err) {
+      setLoadError(err?.response?.data?.message || 'Unable to update status.');
+    }
   };
 
   return (
@@ -207,6 +270,11 @@ const DashArticleListPage = () => {
       </Box>
 
       <Paper sx={{ p: { xs: 2, sm: 3 }, minWidth: 0, overflow: 'hidden' }}>
+        {loadError ? (
+          <Typography sx={{ mb: 2 }} color="error">
+            {loadError}
+          </Typography>
+        ) : null}
         <Stack
           direction={{ xs: 'column', sm: 'row' }}
           spacing={2}
@@ -234,7 +302,7 @@ const DashArticleListPage = () => {
             <MenuItem value="inactive">Inactive</MenuItem>
           </TextField>
           <Box sx={{ flexGrow: 1 }} />
-          <Button variant="contained" onClick={() => openModal()}>
+          <Button variant="contained" onClick={() => openModal()} disabled={isLoading}>
             Add Article
           </Button>
         </Stack>
@@ -244,6 +312,7 @@ const DashArticleListPage = () => {
             rows={filteredRows}
             columns={columns}
             disableRowSelectionOnClick
+            loading={isLoading}
             pageSizeOptions={[5, 10]}
             initialState={{ pagination: { paginationModel: { pageSize: 5, page: 0 } } }}
             sx={{
@@ -275,6 +344,20 @@ const DashArticleListPage = () => {
               fullWidth
             />
             <TextField
+              name="coverImage"
+              label="Cover Image URL"
+              value={form.coverImage}
+              onChange={handleFormChange}
+              fullWidth
+            />
+            <TextField
+              name="coverAlt"
+              label="Cover Image Alt Text"
+              value={form.coverAlt}
+              onChange={handleFormChange}
+              fullWidth
+            />
+            <TextField
               name="content"
               label="Content"
               value={form.content}
@@ -299,7 +382,7 @@ const DashArticleListPage = () => {
         </DialogContent>
         <DialogActions>
           <Button onClick={closeModal}>Cancel</Button>
-          <Button variant="contained" onClick={handleSave}>
+          <Button variant="contained" onClick={handleSave} disabled={isSaving}>
             {modal.id ? 'Save Changes' : 'Add Article'}
           </Button>
         </DialogActions>

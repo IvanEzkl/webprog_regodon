@@ -1,9 +1,19 @@
 const express = require('express');
+const {
+    listArticles,
+    getArticleBySlug,
+    createArticle,
+    updateArticle,
+    toggleArticleStatus,
+} = require('../controllers/articleController');
+const { requireAuth, requireAdmin } = require('../middleware/auth');
+
 const router = express.Router();
 
-// Temporary placeholder route
-router.get('/', (req, res) => {
-    res.json({ message: "Article route placeholder" });
-});
+router.get('/', listArticles);
+router.get('/slug/:slug', getArticleBySlug);
+router.post('/', requireAuth, requireAdmin, createArticle);
+router.put('/:id', requireAuth, requireAdmin, updateArticle);
+router.patch('/:id/status', requireAuth, requireAdmin, toggleArticleStatus);
 
 module.exports = router;

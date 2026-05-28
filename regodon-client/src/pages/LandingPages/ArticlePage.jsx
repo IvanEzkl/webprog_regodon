@@ -1,13 +1,58 @@
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Button from '../../components/Button.jsx';
-import articles from '../../data/article-content.js'
 import NotFoundPage from '../NotFoundPage.jsx';
+import { fetchArticleBySlug } from '../../../ArticleService.js';
 
 function ArticlePage() {
   const { name } = useParams();
-  const article = articles.find(article => article.name === name);
+  const [article, setArticle] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState('');
 
-  if (!article || !Array.isArray(article.content) || article.content.length === 0) {
+  useEffect(() => {
+    let isMounted = true;
+    setIsLoading(true);
+    setError('');
+
+    fetchArticleBySlug(name)
+      .then(({ data }) => {
+        if (!isMounted) {
+          return;
+        }
+        setArticle(data?.article || null);
+      })
+      .catch(() => {
+        if (!isMounted) {
+          return;
+        }
+        setError('not-found');
+      })
+      .finally(() => {
+        if (!isMounted) {
+          return;
+        }
+        setIsLoading(false);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [name]);
+
+  if (isLoading) {
+    return (
+      <div className="flex w-full flex-col gap-6">
+        <section className="border-y-2 border-[var(--border-strong)] bg-[var(--bg-surface)] px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
+          <div className="mx-auto max-w-3xl">
+            <p className="text-sm text-[var(--ink-600)]">Loading article...</p>
+          </div>
+        </section>
+      </div>
+    );
+  }
+
+  if (error || !article || !Array.isArray(article.content) || article.content.length === 0) {
     return <NotFoundPage />;
   }
 
@@ -25,7 +70,10 @@ function ArticlePage() {
             {article.title}
           </h1>
           <p className="mt-2 text-sm text-[var(--ink-500)]">
-            {article.name.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
+            {article.name
+              .split('-')
+              .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+              .join(' ')}
           </p>
         </div>
       </section>

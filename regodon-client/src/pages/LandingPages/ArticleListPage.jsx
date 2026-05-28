@@ -1,8 +1,44 @@
+import { useEffect, useState } from 'react';
 import Button from '../../components/Button.jsx';
 import ArticleList from '../../components/ArticleList.jsx';
-import articles from '../../data/article-content.js';
+import { fetchArticles } from '../../../ArticleService.js';
 
 const ArticleListPage = () => {
+  const [articles, setArticles] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    let isMounted = true;
+    setIsLoading(true);
+    setError('');
+
+    fetchArticles()
+      .then(({ data }) => {
+        if (!isMounted) {
+          return;
+        }
+        const nextArticles = Array.isArray(data?.articles) ? data.articles : [];
+        setArticles(nextArticles);
+      })
+      .catch((err) => {
+        if (!isMounted) {
+          return;
+        }
+        setError(err?.response?.data?.message || 'Unable to load articles.');
+      })
+      .finally(() => {
+        if (!isMounted) {
+          return;
+        }
+        setIsLoading(false);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
   return (
     <div className="flex w-full flex-col gap-6">
       <section className="border-y-2 border-[var(--border-strong)] bg-[var(--bg-surface)] px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
@@ -35,7 +71,13 @@ const ArticleListPage = () => {
           <h2 className="mt-2 text-2xl font-semibold text-[var(--ink-900)]">Article card grid</h2>
         </div>
 
-        <ArticleList articles={articles} />
+        {isLoading ? (
+          <p className="text-sm text-[var(--ink-600)]">Loading articles...</p>
+        ) : error ? (
+          <p className="text-sm text-[var(--accent-strong)]">{error}</p>
+        ) : (
+          <ArticleList articles={articles} />
+        )}
       </section>
     </div>
   );
