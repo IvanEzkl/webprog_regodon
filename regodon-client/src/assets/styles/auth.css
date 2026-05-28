@@ -1,0 +1,379 @@
+/* ═══════════════════════════════════════════════════════════
+   AUTH PAGES – Futuristic / Cyberpunk Theme
+   ═══════════════════════════════════════════════════════════ */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&family=Orbitron:wght@400;500;600;700;800;900&display=swap');
+
+/* ── keyframes ──────────────────────────────────────────── */
+@keyframes auth-fade-up {
+	from { opacity: 0; transform: translateY(24px); }
+	to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes auth-glow-pulse {
+	0%, 100% { opacity: 0.35; }
+	50%      { opacity: 0.65; }
+}
+
+@keyframes auth-border-draw {
+	from { width: 0; }
+	to   { width: 100%; }
+}
+
+@keyframes auth-flicker {
+	0%, 100% { opacity: 1; }
+	92%      { opacity: 1; }
+	93%      { opacity: 0.4; }
+	94%      { opacity: 1; }
+	96%      { opacity: 0.6; }
+	97%      { opacity: 1; }
+}
+
+/* ── layout ─────────────────────────────────────────────── */
+.auth-layout {
+	position: fixed;
+	inset: 0;
+	background: #0a0a0c;
+	overflow: hidden;
+	font-family: 'JetBrains Mono', 'Cascadia Code', monospace;
+}
+
+.auth-layout__grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	height: 100vh;
+	width: 100%;
+}
+
+@media (max-width: 900px) {
+	.auth-layout__grid {
+		grid-template-columns: 1fr;
+	}
+}
+
+/* ── form panel (left) ──────────────────────────────────── */
+.auth-form-panel {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 3rem 2.5rem;
+	background: linear-gradient(160deg, #0f0f12 0%, #141418 50%, #0d0d10 100%);
+	border-right: 1px solid rgba(255, 255, 255, 0.06);
+	position: relative;
+	overflow: hidden;
+}
+
+.auth-form-panel::before {
+	content: '';
+	position: absolute;
+	top: -50%;
+	left: -50%;
+	width: 200%;
+	height: 200%;
+	background: radial-gradient(
+		ellipse at 30% 50%,
+		rgba(120, 100, 255, 0.04) 0%,
+		transparent 60%
+	);
+	pointer-events: none;
+}
+
+.auth-form-panel__inner {
+	width: 100%;
+	max-width: 420px;
+	position: relative;
+	z-index: 1;
+}
+
+/* ── page wrapper (fade-in anim) ────────────────────────── */
+.auth-page--fade-in {
+	animation: auth-fade-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ── header ─────────────────────────────────────────────── */
+.auth-header {
+	margin-bottom: 2.8rem;
+}
+
+.auth-header__badge {
+	display: inline-block;
+	font-size: 10px;
+	font-weight: 500;
+	letter-spacing: 0.22em;
+	color: rgba(255, 255, 255, 0.35);
+	text-transform: uppercase;
+	margin-bottom: 2px;
+}
+
+.auth-header__brand {
+	display: block;
+	font-family: 'Orbitron', 'JetBrains Mono', sans-serif;
+	font-size: 12px;
+	font-weight: 700;
+	letter-spacing: 0.26em;
+	color: rgba(255, 255, 255, 0.55);
+	margin-bottom: 8px;
+}
+
+.auth-header__title {
+	font-family: 'Orbitron', 'JetBrains Mono', sans-serif;
+	font-size: clamp(2rem, 5vw, 3rem);
+	font-weight: 400;
+	letter-spacing: -0.02em;
+	color: #f0f0f5;
+	margin: 0;
+	line-height: 1.1;
+}
+
+/* ── form ───────────────────────────────────────────────── */
+.auth-form {
+	display: flex;
+	flex-direction: column;
+	gap: 1.6rem;
+}
+
+.auth-field-row {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 1rem;
+}
+
+@media (max-width: 480px) {
+	.auth-field-row {
+		grid-template-columns: 1fr;
+	}
+}
+
+/* ── field ──────────────────────────────────────────────── */
+.auth-field__label {
+	display: block;
+	font-size: 10px;
+	font-weight: 600;
+	letter-spacing: 0.18em;
+	color: rgba(255, 255, 255, 0.45);
+	text-transform: uppercase;
+	margin-bottom: 8px;
+}
+
+.auth-field__input {
+	width: 100%;
+	background: transparent;
+	border: none;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+	padding: 10px 0;
+	font-family: 'JetBrains Mono', monospace;
+	font-size: 14px;
+	font-weight: 400;
+	color: rgba(255, 255, 255, 0.7);
+	outline: none;
+	transition: border-color 0.3s ease, color 0.3s ease;
+	box-sizing: border-box;
+}
+
+.auth-field__input::placeholder {
+	color: rgba(255, 255, 255, 0.2);
+}
+
+.auth-field__input:focus {
+	border-bottom-color: rgba(255, 255, 255, 0.5);
+	color: #ffffff;
+}
+
+/* animated underline on focus */
+.auth-field {
+	position: relative;
+}
+
+.auth-field::after {
+	content: '';
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	height: 1px;
+	width: 0;
+	background: linear-gradient(90deg, rgba(180, 160, 255, 0.7), rgba(100, 200, 255, 0.5));
+	transition: width 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.auth-field:focus-within::after {
+	width: 100%;
+}
+
+/* ── submit button ──────────────────────────────────────── */
+.auth-submit {
+	width: 100%;
+	margin-top: 0.8rem;
+	padding: 16px 24px;
+	background: rgba(255, 255, 255, 0.06);
+	border: 1px solid rgba(255, 255, 255, 0.12);
+	border-radius: 0;
+	font-family: 'Orbitron', 'JetBrains Mono', monospace;
+	font-size: 12px;
+	font-weight: 600;
+	letter-spacing: 0.22em;
+	color: #f0f0f5;
+	cursor: pointer;
+	transition: all 0.3s ease;
+	position: relative;
+	overflow: hidden;
+}
+
+.auth-submit::before {
+	content: '';
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+	transform: translateX(-100%);
+	transition: transform 0.5s ease;
+}
+
+.auth-submit:hover {
+	background: rgba(255, 255, 255, 0.1);
+	border-color: rgba(255, 255, 255, 0.25);
+	transform: translateY(-1px);
+}
+
+.auth-submit:hover::before {
+	transform: translateX(100%);
+}
+
+.auth-submit:active {
+	transform: translateY(0);
+}
+
+/* ── switch link ────────────────────────────────────────── */
+.auth-switch {
+	font-size: 11px;
+	letter-spacing: 0.1em;
+	color: rgba(255, 255, 255, 0.3);
+	margin: 0;
+}
+
+.auth-switch__link {
+	color: rgba(255, 255, 255, 0.6);
+	text-decoration: none;
+	font-weight: 600;
+	transition: color 0.25s ease;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+	padding-bottom: 1px;
+}
+
+.auth-switch__link:hover {
+	color: #ffffff;
+	border-bottom-color: rgba(255, 255, 255, 0.4);
+}
+
+/* ── info panel (right) ─────────────────────────────────── */
+.auth-info-panel {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	background: linear-gradient(180deg, #0e0e11 0%, #131316 40%, #101012 100%);
+	overflow: hidden;
+	padding: 3rem 2rem;
+}
+
+@media (max-width: 900px) {
+	.auth-info-panel {
+		display: none;
+	}
+}
+
+.auth-grid-canvas {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	pointer-events: none;
+	z-index: 0;
+}
+
+/* ── hero text ──────────────────────────────────────────── */
+.auth-info-hero {
+	position: relative;
+	z-index: 1;
+	text-align: center;
+	margin-bottom: 2.5rem;
+	animation: auth-flicker 6s infinite;
+}
+
+.auth-info-hero__sub {
+	display: block;
+	font-family: 'JetBrains Mono', monospace;
+	font-size: 12px;
+	font-weight: 400;
+	letter-spacing: 0.3em;
+	color: rgba(255, 255, 255, 0.2);
+	margin-bottom: 0.5rem;
+}
+
+.auth-info-hero__big {
+	display: block;
+	font-family: 'Orbitron', sans-serif;
+	font-size: clamp(6rem, 14vw, 11rem);
+	font-weight: 900;
+	color: rgba(255, 255, 255, 0.06);
+	line-height: 0.85;
+	letter-spacing: -0.04em;
+	text-shadow: 0 0 80px rgba(255, 255, 255, 0.03);
+}
+
+.auth-info-hero__label {
+	display: block;
+	font-family: 'Orbitron', sans-serif;
+	font-size: clamp(2.5rem, 5vw, 4.5rem);
+	font-weight: 700;
+	color: rgba(255, 255, 255, 0.09);
+	letter-spacing: 0.15em;
+	margin-top: -0.5rem;
+}
+
+/* ── tagline ────────────────────────────────────────────── */
+.auth-info-tagline {
+	position: relative;
+	z-index: 1;
+	font-family: 'JetBrains Mono', monospace;
+	font-size: 11px;
+	font-weight: 400;
+	font-style: italic;
+	letter-spacing: 0.15em;
+	color: rgba(255, 255, 255, 0.22);
+	text-align: center;
+	line-height: 1.8;
+	margin-bottom: 2rem;
+}
+
+/* ── clock data ─────────────────────────────────────────── */
+.auth-info-clock {
+	position: relative;
+	z-index: 1;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+	gap: 4px;
+}
+
+.auth-info-clock__row {
+	display: flex;
+	align-items: baseline;
+	gap: 12px;
+}
+
+.auth-info-clock__label {
+	font-family: 'JetBrains Mono', monospace;
+	font-size: 10px;
+	font-weight: 600;
+	letter-spacing: 0.2em;
+	color: rgba(255, 255, 255, 0.2);
+}
+
+.auth-info-clock__value {
+	font-family: 'JetBrains Mono', monospace;
+	font-size: 13px;
+	font-weight: 500;
+	letter-spacing: 0.08em;
+	color: rgba(255, 255, 255, 0.45);
+	min-width: 110px;
+	text-align: right;
+}
