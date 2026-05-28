@@ -220,14 +220,18 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-const getPageTitle = (pathname) =>
-  dashboardNavItems.find(({ to }) => to === pathname)?.title ?? 'Welcome';
+const getPageTitle = (pathname, navItems) =>
+  navItems.find(({ to }) => to === pathname)?.title ?? 'Welcome';
 
 const DashLayout = () => {
   const theme = useTheme();
   const [open, setOpen] = useState(false);
   const location = useLocation();
-  const pageTitle = getPageTitle(location.pathname);
+  const userRole = localStorage.getItem('type');
+  const visibleNavItems = userRole === 'admin'
+    ? dashboardNavItems
+    : dashboardNavItems.filter((item) => item.to !== '/dashboard/users');
+  const pageTitle = getPageTitle(location.pathname, visibleNavItems);
   const navigate = useNavigate();
 
   const handleDrawerOpen = () => {
@@ -291,7 +295,7 @@ const DashLayout = () => {
           </DrawerHeader>
           <Divider />
           <List>
-            {dashboardNavItems.map(({ label, to, icon: Icon }) => (
+            {visibleNavItems.map(({ label, to, icon: Icon }) => (
               <ListItem key={to} disablePadding sx={{ display: "block" }}>
                 <ListItemButton
                   component={Link}

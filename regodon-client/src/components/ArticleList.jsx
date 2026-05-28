@@ -1,5 +1,30 @@
 import { Link } from 'react-router-dom';
 import Button from './Button';
+import herodesign from '../assets/herodesign.jpg';
+import gridCover from '../assets/grid.png';
+import navCover from '../assets/webnav.jpeg';
+import defaultCover from '../assets/hero.jpg';
+import technicalWriting from '../assets/technicalwriting.png';
+import shippingCover from '../assets/shipping.jpg';
+import opCover from '../assets/op.jpg';
+
+const ASSET_MAP = {
+    'src/assets/herodesign.jpg': herodesign,
+    'src/assets/grid.png': gridCover,
+    'src/assets/webnav.jpeg': navCover,
+    'src/assets/hero.jpg': defaultCover,
+    'src/assets/technicalwriting.png': technicalWriting,
+    'src/assets/shipping.jpg': shippingCover,
+    'src/assets/op.jpg': opCover,
+};
+
+const resolveArticleCover = (value) => {
+    if (!value) {
+        return '';
+    }
+
+    return ASSET_MAP[value] || value;
+};
 
 const ArticleList = ({ articles }) => {
     if (!Array.isArray(articles) || articles.length === 0) {
@@ -15,7 +40,7 @@ const ArticleList = ({ articles }) => {
                     <div className="flex aspect-[4/3] items-center justify-center overflow-hidden rounded-[1.25rem] border-2 border-[var(--border-soft)] bg-[var(--bg-soft)] p-2">
                         {article.coverImage ? (
                             <img
-                                src={article.coverImage}
+                                src={resolveArticleCover(article.coverImage)}
                                 alt={article.coverAlt || article.title}
                                 className="h-full w-full object-contain"
                                 loading="lazy"

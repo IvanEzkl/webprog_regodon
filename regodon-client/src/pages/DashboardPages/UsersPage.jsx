@@ -25,6 +25,7 @@ import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { DataGrid } from '@mui/x-data-grid';
 import usersSeed from '../../data/users.json';
 import { createUser, fetchUsers } from '../../../UserService';
+import NotFoundPage from '../NotFoundPage.jsx';
 
 const roles = ['admin', 'editor', 'viewer'];
 const genders = ['male', 'female', 'other'];
@@ -109,6 +110,11 @@ const mergeUsers = (seedUsers, apiUsers) => {
 };
 
 const UsersPage = () => {
+  const userRole = localStorage.getItem('type');
+  if (userRole !== 'admin') {
+    return <NotFoundPage />;
+  }
+
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [modal, setModal] = useState({ open: false, id: null });
