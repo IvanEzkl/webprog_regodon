@@ -149,6 +149,8 @@ app.get("/api/debug-db", (req, res) => {
     endsWithQuote: uri.endsWith('"') || uri.endsWith("'"),
     maskedUri: uri.replace(/:([^@]+)@/, ":******@"),
     readyState: require("mongoose").connection.readyState,
+    hasJwtSecret: !!process.env.JWT_SECRET,
+    jwtSecretLength: process.env.JWT_SECRET ? process.env.JWT_SECRET.length : 0,
   });
 });
 
