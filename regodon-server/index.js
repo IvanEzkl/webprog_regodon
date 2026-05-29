@@ -62,12 +62,33 @@ app.use(async (req, res, next) => {
   if (mongoose.connection.readyState !== 1) {
     console.log(`Database state is ${mongoose.connection.readyState}. Attempting to connect...`);
     try {
-      await mongoose.connect(process.env.MONGO_URI, {});
+      if (mongoose.connection.readyState === 2) {
+        // If connection is in progress, wait for the connection promise to resolve
+        await new Promise((resolve) => {
+          mongoose.connection.once('connected', () => {
+            console.log("Database connection established.");
+            resolve();
+          });
+          mongoose.connection.once('error', (err) => {
+            console.error("Database connection error while waiting:", err);
+            resolve();
+          });
+          // Timeout after 5 seconds
+          setTimeout(() => {
+            console.log("Database connection wait timed out (5s).");
+            resolve();
+          }, 5000);
+        });
+      } else {
+        await mongoose.connect(process.env.MONGO_URI, {});
+      }
+
       if (mongoose.connection.readyState !== 1) {
         return res.status(500).json({
           message: "Database Connection State Error",
           readyState: mongoose.connection.readyState,
-          uri: maskedUri
+          uri: maskedUri,
+          hint: "The database connection is still in progress or failed to establish. Please check if your MongoDB Atlas whitelisting (0.0.0.0/0) is active."
         });
       }
     } catch (err) {
