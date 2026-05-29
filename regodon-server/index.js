@@ -113,6 +113,19 @@ app.use((req, res, next) => {
   next();
 });
 
+// Debug Endpoint
+app.get("/api/debug-db", (req, res) => {
+  const uri = process.env.MONGO_URI || "";
+  res.json({
+    hasUri: !!uri,
+    uriLength: uri.length,
+    startsWithQuote: uri.startsWith('"') || uri.startsWith("'"),
+    endsWithQuote: uri.endsWith('"') || uri.endsWith("'"),
+    maskedUri: uri.replace(/:([^@]+)@/, ":******@"),
+    readyState: require("mongoose").connection.readyState,
+  });
+});
+
 // Routes
 app.use("/api/users", userRoutes);
 app.use("/api/articles", articleRoutes);
