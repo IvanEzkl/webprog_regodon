@@ -1,15 +1,18 @@
 const mongoose = require('mongoose');
 
 const connectDB = async () => {
-  // Connect MongoDB at default port 27017.
   try {
-    const conn = await mongoose.connect(process.env.MONGO_URI, {
-
-    });
+    if (!process.env.MONGO_URI) {
+      console.error("MongoDB Connection Error: MONGO_URI is not defined");
+      return;
+    }
+    const conn = await mongoose.connect(process.env.MONGO_URI, {});
     console.log(`MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
-    console.error(`Error: ${error.message}`);
-    process.exit(1); // Exit process with failure
+    console.error(`MongoDB Connection Error: ${error.message}`);
+    if (!process.env.VERCEL) {
+      process.exit(1); // Only exit process locally
+    }
   }
 };
 

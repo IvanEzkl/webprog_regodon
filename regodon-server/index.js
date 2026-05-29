@@ -25,7 +25,9 @@ if (!loaded) {
 }
 if (!process.env.MONGO_URI) {
   console.error("Missing MONGO_URI. Check your .env file location and value.");
-  process.exit(1);
+  if (!process.env.VERCEL) {
+    process.exit(1);
+  }
 }
 const express = require("express");
 const cors = require("cors");
@@ -41,6 +43,18 @@ const app = express();
 connectDB();
 
 app.use(express.json());
+
+// Check if Database Configuration is complete
+app.use((req, res, next) => {
+  if (!process.env.MONGO_URI) {
+    return res.status(500).json({
+      message: "Database Configuration Error",
+      error: "Missing MONGO_URI environment variable on Vercel.",
+      hint: "Please add MONGO_URI in your Vercel Project Settings > Environment Variables."
+    });
+  }
+  next();
+});
 
 // Middleware
 app.use(jsonParser);
