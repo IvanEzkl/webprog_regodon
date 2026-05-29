@@ -134,6 +134,11 @@ app.use((req, res, next) => {
   next();
 });
 
+// Default Root Route
+app.get("/", (req, res) => {
+  res.json({ message: "Regodon API Server is running!" });
+});
+
 // Debug Endpoint
 app.get("/api/debug-db", (req, res) => {
   const uri = process.env.MONGO_URI || "";
