@@ -44,14 +44,39 @@ connectDB();
 
 app.use(express.json());
 
-// Check if Database Configuration is complete
-app.use((req, res, next) => {
+// Check if Database Configuration is complete and ensure connection (crucial for Serverless cold starts)
+app.use(async (req, res, next) => {
   if (!process.env.MONGO_URI) {
     return res.status(500).json({
       message: "Database Configuration Error",
       error: "Missing MONGO_URI environment variable on Vercel.",
       hint: "Please add MONGO_URI in your Vercel Project Settings > Environment Variables."
     });
+  }
+
+  const mongoose = require("mongoose");
+  
+  // Mask connection string for security in logs/responses
+  const maskedUri = process.env.MONGO_URI.replace(/:([^@]+)@/, ":******@");
+
+  if (mongoose.connection.readyState !== 1) {
+    console.log(`Database state is ${mongoose.connection.readyState}. Attempting to connect...`);
+    try {
+      await mongoose.connect(process.env.MONGO_URI, {});
+      if (mongoose.connection.readyState !== 1) {
+        return res.status(500).json({
+          message: "Database Connection State Error",
+          readyState: mongoose.connection.readyState,
+          uri: maskedUri
+        });
+      }
+    } catch (err) {
+      return res.status(500).json({
+        message: "Database Connection Error",
+        error: err.message,
+        uri: maskedUri
+      });
+    }
   }
   next();
 });
